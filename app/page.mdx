@@ -1,30 +1,461 @@
-# Building and Testing a Go API with Keploy
+import ThemeToggle from "../components/ThemeToggle";
 
-A beginner-friendly guide to recording and replaying API test cases with **Keploy** using a Go Echo + PostgreSQL application.
+<div className="docs-shell">
 
-> **What you'll build:** A small Go API workflow where Keploy records real API traffic and turns it into reusable test cases and mocks.
+<header className="topbar">
 
-## What you'll learn
+<div className="brand">
+<div className="brand-mark">K</div>
+<span>Keploy Docs</span>
+<span className="brand-subtitle">Developer Tutorial</span>
+</div>
 
-- Run a Go API locally
-- Connect the application to PostgreSQL
-- Send a real API request
-- Capture traffic with Keploy
-- Generate test cases automatically
-- Replay the tests without depending on the original database
+<ThemeToggle />
 
----
+</header>
 
-## 1. Prerequisites
+<div className="layout">
 
-Before starting, make sure you have:
+<aside className="sidebar">
 
-- Go installed
-- PostgreSQL running
-- Keploy CLI installed
-- `curl` installed
+<div className="sidebar-title">On this page</div>
 
-Check your Keploy installation:
+<a href="#overview">Overview</a>
+<a href="#prerequisites">1. Prerequisites</a>
+<a href="#start">2. Start the Go application</a>
+<a href="#request">3. Send an API request</a>
+<a href="#capture">4. Capture the request</a>
+<a href="#generate">5. Generate the test</a>
+<a href="#replay">6. Replay the test</a>
+<a href="#workflow">7. Complete workflow</a>
+<a href="#troubleshooting">8. Troubleshooting</a>
+<a href="#conclusion">9. Conclusion</a>
 
-```bash
-keploy --version
+</aside>
+
+<main className="article">
+
+<section className="hero" id="overview">
+
+<div className="eyebrow">
+● Keploy Developer Tutorial
+</div>
+
+<h1>Building and Testing a Go API with Keploy</h1>
+
+<p>
+A practical beginner-friendly guide to recording, generating and replaying API test cases with Keploy using a Go Echo + PostgreSQL application.
+</p>
+
+<div className="meta">
+<span>Keploy</span>
+<span>Go</span>
+<span>Echo</span>
+<span>PostgreSQL</span>
+<span>Beginner friendly</span>
+</div>
+
+</section>
+
+<div className="callout">
+
+<strong>What you'll build</strong>
+
+A small Go API workflow where Keploy records real API traffic, converts it into reusable test cases and lets you replay those tests without depending on the original database state.
+
+</div>
+
+<section className="section">
+
+<h2>What you'll learn</h2>
+
+<div className="workflow">
+
+<details className="workflow-card">
+<summary>
+<div className="number">01</div>
+<strong>Run the API</strong>
+</summary>
+<p>Start the Go application locally and make sure the API is responding.</p>
+</details>
+
+<details className="workflow-card">
+<summary>
+<div className="number">02</div>
+<strong>Record traffic</strong>
+</summary>
+<p>Send a real API request while Keploy observes and records the interaction.</p>
+</details>
+
+<details className="workflow-card">
+<summary>
+<div className="number">03</div>
+<strong>Replay tests</strong>
+</summary>
+<p>Use the generated test case to validate the application's behaviour again.</p>
+</details>
+
+</div>
+
+</section>
+
+<section className="section" id="prerequisites">
+
+<h2>1. Prerequisites</h2>
+
+<p>
+Before starting make sure the following tools are available.
+</p>
+
+<ul className="checklist">
+<li>Go installed</li>
+<li>PostgreSQL running</li>
+<li>Keploy CLI installed</li>
+<li>curl installed</li>
+</ul>
+
+<details className="callout">
+<summary><strong>Check your Keploy installation</strong></summary>
+
+<p>Open a terminal and run:</p>
+
+<pre><code>{`keploy --version`}</code></pre>
+
+<p>
+If the command returns the installed Keploy version the CLI is ready.
+</p>
+
+</details>
+
+</section>
+
+<section className="section" id="start">
+
+<h2>2. Start the Go application</h2>
+
+<p>
+The example application used in this tutorial is a Go API backed by PostgreSQL.
+</p>
+
+<div className="step">
+
+<div className="step-number">1</div>
+
+<div>
+
+<h3>Move into the sample application</h3>
+
+<p>
+This command belongs to the Go sample project rather than the Next.js documentation project.
+</p>
+
+<pre><code>{`cd samples-go/echo-sql`}</code></pre>
+
+</div>
+
+</div>
+
+<div className="step">
+
+<div className="step-number">2</div>
+
+<div>
+
+<h3>Start the application through Keploy</h3>
+
+<pre><code>{`keploy record -c "./echo-pgsql-url-shortener"`}</code></pre>
+
+<p>
+Keploy starts the application and prepares it for traffic recording.
+</p>
+
+</div>
+
+</div>
+
+<div className="callout">
+
+<strong>Important</strong>
+
+<p>
+You are documenting this workflow here. The commands above are not commands that need to be executed inside this Next.js documentation project.
+</p>
+
+</div>
+
+</section>
+
+<section className="section" id="request">
+
+<h2>3. Send a real API request</h2>
+
+<p>
+With the Go application running send a request to the API.
+</p>
+
+<pre><code>{`curl -X POST http://localhost:8082/url \\
+  -H "Content-Type: application/json" \\
+  -d '{"url":"https://example.com"}'`}</code></pre>
+
+<div className="callout">
+
+<strong>What happens here?</strong>
+
+<p>
+The request is processed by the application while Keploy captures the traffic between the client and the API.
+</p>
+
+</div>
+
+</section>
+
+<section className="section" id="capture">
+
+<h2>4. Capture the request</h2>
+
+<p>
+Keploy observes the real API interaction and records the request and response information.
+</p>
+
+<div className="steps">
+
+<div className="step">
+<div className="step-number">✓</div>
+<div>
+<h3>Request captured</h3>
+<p>The HTTP request is observed by Keploy.</p>
+</div>
+</div>
+
+<div className="step">
+<div className="step-number">✓</div>
+<div>
+<h3>Response recorded</h3>
+<p>The application's response becomes part of the captured interaction.</p>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<section className="section" id="generate">
+
+<h2>5. Generate the test case</h2>
+
+<p>
+The recorded interaction can now be converted into a reusable test case.
+</p>
+
+<div className="callout">
+
+<strong>Why is this useful?</strong>
+
+<p>
+Instead of manually writing the same API scenario from scratch Keploy allows a real application interaction to become the starting point for an automated test.
+</p>
+
+</div>
+
+</section>
+
+<section className="section" id="replay">
+
+<h2>6. Replay the test</h2>
+
+<p>
+Once the test case has been generated it can be replayed to validate the application behaviour.
+</p>
+
+<pre><code>{`keploy test -c "./echo-pgsql-url-shortener"`}</code></pre>
+
+<div className="callout">
+
+<strong>Expected result</strong>
+
+<p>
+Keploy replays the recorded interaction and compares the observed behaviour with the expected result captured during recording.
+</p>
+
+</div>
+
+</section>
+
+<section className="section" id="workflow">
+
+<h2>7. Complete workflow</h2>
+
+<p>
+The complete Keploy workflow can be understood as a simple pipeline.
+</p>
+
+<div className="workflow">
+
+<details className="workflow-card">
+<summary>
+<div className="number">01</div>
+<strong>Run</strong>
+</summary>
+<p>Start the Go API locally.</p>
+</details>
+
+<details className="workflow-card">
+<summary>
+<div className="number">02</div>
+<strong>Request</strong>
+</summary>
+<p>Send a real HTTP request to the API.</p>
+</details>
+
+<details className="workflow-card">
+<summary>
+<div className="number">03</div>
+<strong>Record</strong>
+</summary>
+<p>Keploy captures the traffic.</p>
+</details>
+
+<details className="workflow-card">
+<summary>
+<div className="number">04</div>
+<strong>Generate</strong>
+</summary>
+<p>The interaction becomes a reusable test case.</p>
+</details>
+
+<details className="workflow-card">
+<summary>
+<div className="number">05</div>
+<strong>Replay</strong>
+</summary>
+<p>The test is executed again to validate behaviour.</p>
+</details>
+
+</div>
+
+<pre><code>{`Go API
+   ↓
+Real API request
+   ↓
+Keploy records traffic
+   ↓
+Test case generated
+   ↓
+Test case replayed
+   ↓
+Application behaviour validated`}</code></pre>
+
+</section>
+
+<section className="section" id="troubleshooting">
+
+<h2>8. Troubleshooting</h2>
+
+<details className="callout">
+<summary><strong>The API is not responding</strong></summary>
+
+<p>
+Check that the Go application is running and that the expected port is available.
+</p>
+
+<pre><code>{`curl http://localhost:8082`}</code></pre>
+
+</details>
+
+<details className="callout">
+<summary><strong>Keploy command is not recognized</strong></summary>
+
+<p>
+Verify that the Keploy CLI is installed correctly.
+</p>
+
+<pre><code>{`keploy --version`}</code></pre>
+
+</details>
+
+<details className="callout">
+<summary><strong>PostgreSQL connection fails</strong></summary>
+
+<p>
+Make sure PostgreSQL is running and that the application is configured with the correct database connection details.
+</p>
+
+</details>
+
+<details className="callout">
+<summary><strong>The generated test does not behave as expected</strong></summary>
+
+<p>
+Check the recorded request and response and verify that the application's database state matches the testing scenario.
+</p>
+
+</details>
+
+</section>
+
+<section className="section">
+
+<h2>What we achieved</h2>
+
+<ul className="checklist">
+<li>Ran a Go API locally</li>
+<li>Connected the application to PostgreSQL</li>
+<li>Sent a real API request</li>
+<li>Recorded the interaction with Keploy</li>
+<li>Generated a reusable test case</li>
+<li>Replayed the test</li>
+<li>Documented the complete workflow</li>
+</ul>
+
+</section>
+
+<section className="section" id="conclusion">
+
+<h2>9. Conclusion</h2>
+
+<p>
+Keploy provides a practical way to turn real application behaviour into reusable API test cases.
+</p>
+
+<div className="callout">
+
+<strong>The core idea</strong>
+
+<p>
+Run → Record → Generate → Replay
+</p>
+
+</div>
+
+</section>
+
+<footer className="footer">
+
+Built as a Keploy Developer Relations tutorial using Next.js + MDX.
+
+</footer>
+
+</main>
+
+<aside className="toc">
+
+<div className="toc-title">Quick navigation</div>
+
+<a href="#overview">Overview</a>
+<a href="#prerequisites">Prerequisites</a>
+<a href="#start">Start API</a>
+<a href="#request">API Request</a>
+<a href="#capture">Capture</a>
+<a href="#generate">Generate</a>
+<a href="#replay">Replay</a>
+<a href="#workflow">Workflow</a>
+<a href="#troubleshooting">Troubleshooting</a>
+<a href="#conclusion">Conclusion</a>
+
+</aside>
+
+</div>
+
+</div>
+
+
